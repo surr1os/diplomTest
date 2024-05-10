@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Ramsey\Uuid\Guid\Guid;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -20,7 +21,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return response()->json(['token' => 'sdfdsfsdfdsfsdfs', 'userName' => $user->name]);
+        return response()->json(['token' => csrf_token(), 'userName' => $user->name]);
     }
 
     /**
