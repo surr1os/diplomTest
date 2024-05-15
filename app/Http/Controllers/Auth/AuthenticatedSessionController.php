@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -19,9 +20,16 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
         $user = $request->user();
 
+        $payload = [
+            'sub' => $user->id,
+            'iat' => time(),
+            'exp' => time() + 60*60*2, // 2 hours expiration time
+        ];
+        $token = JWT::encode($payload, 'sekret_key', 'HS256');
+
         $request->session()->regenerate();
 
-        return response()->json(['token' => csrf_token(), 'userName' => $user->name]);
+        return response()->json(['token' => $token, 'userName' => $user->name, 'userId' => $user->id]);
     }
 
     /**
