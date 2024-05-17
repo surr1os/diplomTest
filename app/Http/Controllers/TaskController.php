@@ -25,14 +25,20 @@ class TaskController extends Controller
                     'taskId' => $task->taskId,
                     'completed' => $task->completed
                 ];
-            });
+            })->toArray(); // Преобразуем коллекцию в массив
 
-            $response['data'][$groupId] = [
+            $response[] = [
                 'groupTitle' => $groupTitle,
+                'groupId' => $groupId,
                 'tasks' => $taskList
             ];
         }
 
         return response()->json($response);
+    }
+
+    public function createTask()
+    {
+
     }
 }
