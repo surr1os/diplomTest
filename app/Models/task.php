@@ -10,6 +10,8 @@ class task extends Model
     use HasFactory;
 
     protected $table = 'tasks';
-
-    protected $fillable = ['title', 'completed', 'groupId', 'groupTitle', 'userId', 'createdAt', 'updatedAt'];
+    protected $primaryKey = 'taskId'; // Указываем поле taskId как первичный ключ
+    public $incrementing = false; // Устанавливаем auto-increment в значение false
+    protected $keyType = 'string'; // Устанавливаем тип ключа как строка
+    protected $fillable = ['taskId','title', 'completed', 'groupId', 'groupTitle', 'userId', 'created_at', 'updated_at'];
 }
