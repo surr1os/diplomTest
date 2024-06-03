@@ -115,4 +115,21 @@ class TaskController extends Controller
 
         return response()->json(['message' => 'Заголовок задачи успешно обновлен'], 200);
     }
+
+    public function updateGroupPriority(Request $request) : JsonResponse
+    {
+        $groupId = $request->input('groupId');
+        $priority = $request->input('priority');
+        $tasks = Task::where('groupId', $groupId)->get();
+
+        if ($tasks->isEmpty()) {
+            return response()->json(['message' => 'Задачи не найдены для данного groupId'], 404);
+        }
+
+        foreach ($tasks as $task) {
+            $task->update(['group_priority' => $priority]);
+        }
+
+        return response()->json(['message' => 'Приоритет задач успешно обновлен'], 200);
+    }
 }
