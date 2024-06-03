@@ -13,5 +13,5 @@ class task extends Model
     protected $primaryKey = 'taskId'; // Указываем поле taskId как первичный ключ
     public $incrementing = false; // Устанавливаем auto-increment в значение false
     protected $keyType = 'string'; // Устанавливаем тип ключа как строка
-    protected $fillable = ['taskId','title', 'completed', 'group_priority', 'groupId', 'groupTitle', 'userId', 'created_at', 'updated_at'];
+    protected $fillable = ['taskId','title', 'completed', 'group_priority', 'groupId', 'groupTitle', 'userId', 'created_at', 'updated_at', 'execution_date'];
 }

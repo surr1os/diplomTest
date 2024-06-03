@@ -22,6 +22,7 @@ class TaskController extends Controller
         foreach ($groupedTasks as $groupId => $tasks) {
             $groupTitle = $tasks->first()->groupTitle;
             $groupPriority = $tasks->first()->group_priority;
+            $execution_date = $tasks->first()->execution_date;
             $taskList = $tasks->map(function ($task) {
                 return [
                     'title' => $task->title,
@@ -34,6 +35,7 @@ class TaskController extends Controller
                 'groupTitle' => $groupTitle,
                 'groupId' => $groupId,
                 'group_priority' => $groupPriority,
+                'execution_date' => $execution_date,
                 'tasks' => $taskList
             ];
         }
@@ -48,6 +50,7 @@ class TaskController extends Controller
             'groupId' => 'required|string',
             'userId' => 'required|string',
             'group_priority' => 'required|string',
+            'execution_date' => 'required|string',
             'groupTitle' => 'required|string'
         ]);
 
@@ -61,7 +64,7 @@ class TaskController extends Controller
         $task->completed = false;
         $task->created_at = now();
         $task->updated_at = now();
-
+        $task->execution_date = $data['execution_date'];
         $task->save();
 
         return response()->json($task, 201);
