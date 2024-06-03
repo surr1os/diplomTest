@@ -21,6 +21,7 @@ class TaskController extends Controller
         $response = [];
         foreach ($groupedTasks as $groupId => $tasks) {
             $groupTitle = $tasks->first()->groupTitle;
+            $groupPriority = $tasks->first()->group_priority;
             $taskList = $tasks->map(function ($task) {
                 return [
                     'title' => $task->title,
@@ -32,6 +33,7 @@ class TaskController extends Controller
             $response[] = [
                 'groupTitle' => $groupTitle,
                 'groupId' => $groupId,
+                'group_priority' => $groupPriority,
                 'tasks' => $taskList
             ];
         }
@@ -45,6 +47,7 @@ class TaskController extends Controller
             'title' => 'required|string',
             'groupId' => 'required|string',
             'userId' => 'required|string',
+            'group_priority' => 'required|string',
             'groupTitle' => 'required|string'
         ]);
 
@@ -54,6 +57,7 @@ class TaskController extends Controller
         $task->groupId = $data['groupId'];
         $task->groupTitle = $data['groupTitle'];
         $task->userId = $data['userId'];
+        $task->group_priority = $data['group_priority'];
         $task->completed = false;
         $task->created_at = now();
         $task->updated_at = now();
