@@ -85,7 +85,7 @@ class TaskController extends Controller
         return response()->json(['message' => 'Задача успешно удалена'], 200);
     }
 
-    public function updateTaskStatus(Request $request)
+    public function updateTaskStatus(Request $request): JsonResponse
     {
         $taskId = $request->input('taskId');
         $task = Task::find($taskId);
@@ -101,7 +101,7 @@ class TaskController extends Controller
         return response()->json(['message' => 'Статус задачи успешно обновлен'], 200);
     }
 
-    public function updateTaskTitle(Request $request)
+    public function updateTaskTitle(Request $request): JsonResponse
     {
         $taskId = $request->input('taskId');
         $taskTitle = $request->input('title');
@@ -119,7 +119,7 @@ class TaskController extends Controller
         return response()->json(['message' => 'Заголовок задачи успешно обновлен'], 200);
     }
 
-    public function updateGroupPriority(Request $request) : JsonResponse
+    public function updateGroupPriority(Request $request): JsonResponse
     {
         $groupId = $request->input('groupId');
         $priority = $request->input('priority');
@@ -134,5 +134,22 @@ class TaskController extends Controller
         }
 
         return response()->json(['message' => 'Приоритет задач успешно обновлен'], 200);
+    }
+
+    public function updateExecutionDate(Request $request): JsonResponse
+    {
+        $groupId = $request->input('groupId');
+        $date = $request->input('date');
+        $tasks = Task::where('groupId', $groupId)->get();
+        $formattedDate = date('Y-m-d H:i:s', strtotime($date));
+        if ($tasks->isEmpty()) {
+            return response()->json(['message' => 'Задачи не найдены для данного groupId'], 404);
+        }
+
+        foreach ($tasks as $task) {
+            $task->update(['execution_date' => $formattedDate]);
+        }
+
+        return response()->json(['message' => 'Срок задач успешно обновлен'], 200);
     }
 }

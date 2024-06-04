@@ -14,6 +14,7 @@ Route::post('/create-task', [TaskController::class, 'createTask']);
 Route::post('/delete-task', [TaskController::class, 'deleteTask']);
 Route::patch('/update-task', [TaskController::class, 'updateTaskStatus']);
 Route::put('/update-taskTitle',[TaskController::class, 'updateTaskTitle']);
-Route::patch('update-priority', [TaskController::class, 'updateGroupPriority']);
+Route::patch('/update-priority', [TaskController::class, 'updateGroupPriority']);
+Route::patch('/update-executiondate', [TaskController::class, 'updateExecutionDate']);
 
 Route::post('/verify-token', [CheckJwt::class, 'verifyToken']);
