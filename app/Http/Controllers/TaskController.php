@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\task;
+use Carbon\Carbon;
 use Faker\Core\Uuid;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -151,5 +152,38 @@ class TaskController extends Controller
         }
 
         return response()->json(['message' => 'Срок задач успешно обновлен'], 200);
+    }
+
+    public function createTaskList(Request $request): JsonResponse
+    {
+        $taskListData = $request->input('list');
+        $newTasks = $taskListData['tasks'];
+        $userId = $request->input('userId');
+        $groupId = $taskListData['groupId'];
+        $groupTitle = $taskListData['groupTitle'];
+        $groupPriority = $taskListData['group_priority'];
+        $executionDate = Carbon::parse($taskListData['execution_date'])->toDateTimeString();
+
+        foreach ($newTasks as $newTask) {
+            Task::create([
+                'taskId' => $newTask['taskId'], // Генерируем новый uuid для каждой задачи
+                'title' => $newTask['title'],
+                'completed' => $newTask['completed'],
+                'group_priority' => $groupPriority,
+                'groupId' => $groupId,
+                'groupTitle' => $groupTitle,
+                'userId' => $userId,
+                'execution_date' => $executionDate,
+            ]);
+        }
+
+        return response()->json(['message' => 'Список задач успешно создан!'], 200);
+    }
+
+    public function deleteTaskList(Request $request): JsonResponse
+    {
+        $groupId = $request->input('groupId');
+        Task::where('groupId', $groupId)->delete();
+        return response()->json(['message' => 'Список задач успешно удален!'], 200);
     }
 }
