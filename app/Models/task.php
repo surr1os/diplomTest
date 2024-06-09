@@ -13,5 +13,5 @@ class task extends Model
     protected $primaryKey = 'taskId';
     public $incrementing = false;
     protected $keyType = 'string';
-    protected $fillable = ['taskId','title', 'completed', 'group_priority', 'groupId', 'groupTitle', 'userId', 'created_at', 'updated_at', 'execution_date'];
+    protected $fillable = ['taskId','title', 'completed', 'group_priority', 'groupId', 'groupTitle', 'userId', 'created_at', 'updated_at', 'execution_date', 'executor'];
 }

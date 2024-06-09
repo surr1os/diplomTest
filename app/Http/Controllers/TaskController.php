@@ -24,6 +24,7 @@ class TaskController extends Controller
             $groupTitle = $tasks->first()->groupTitle;
             $groupPriority = $tasks->first()->group_priority;
             $execution_date = $tasks->first()->execution_date;
+            $executor = $tasks->first()->executor;
             $taskList = $tasks->map(function ($task) {
                 return [
                     'title' => $task->title,
@@ -37,6 +38,7 @@ class TaskController extends Controller
                 'groupId' => $groupId,
                 'group_priority' => $groupPriority,
                 'execution_date' => $execution_date,
+                'executor' => $executor,
                 'tasks' => $taskList
             ];
         }
@@ -44,7 +46,7 @@ class TaskController extends Controller
         return response()->json($response);
     }
 
-    public function createTask(Request $request)
+    public function createTask(Request $request): JsonResponse
     {
         $data = $request->validate([
             'title' => 'required|string',
@@ -66,6 +68,7 @@ class TaskController extends Controller
         $task->created_at = now();
         $task->updated_at = now();
         $task->execution_date = $data['execution_date'];
+        $task->executor = null;
         $task->save();
 
         return response()->json($task, 201);
@@ -174,6 +177,7 @@ class TaskController extends Controller
                 'groupTitle' => $groupTitle,
                 'userId' => $userId,
                 'execution_date' => $executionDate,
+                'executor' => null
             ]);
         }
 
@@ -185,5 +189,37 @@ class TaskController extends Controller
         $groupId = $request->input('groupId');
         Task::where('groupId', $groupId)->delete();
         return response()->json(['message' => 'Список задач успешно удален!'], 200);
+    }
+
+    public function updateExecutor(Request $request): JsonResponse
+    {
+        $groupId = $request->input('groupId');
+        $executor = $request->input('executor');
+        $tasks = Task::where('groupId', $groupId)->get();
+
+        if ($tasks->isEmpty()) {
+            return response()->json(['message' => 'Задачи не найдены для данного groupId'], 404);
+        }
+
+        foreach ($tasks as $task) {
+            $task->update(['executor' => $executor]);
+        }
+        return response()->json(['message' => 'Исполнитель успешно изменен!'], 200);
+    }
+
+    public function updateGroupTitle(Request $request) : JsonResponse
+    {
+        $groupId = $request->input('groupId');
+        $groupTitle = $request->input('groupTitle');
+        $tasks = Task::where('groupId', $groupId)->get();
+
+        if ($tasks->isEmpty()) {
+            return response()->json(['message' => 'Задачи не найдены для данного groupId'], 404);
+        }
+
+        foreach ($tasks as $task) {
+            $task->update(['groupTitle' => $groupTitle]);
+        }
+        return response()->json(['message' => 'Исполнитель успешно изменен!'], 200);
     }
 }
